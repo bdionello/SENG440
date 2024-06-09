@@ -3,6 +3,8 @@
  * To be adpted...
  */
 
+// This is just a test - 1
+
 #define SC_INCLUDE_FX
 
 #include "systemc.h"
