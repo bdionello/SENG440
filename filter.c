@@ -45,8 +45,8 @@ void main(void){
     filter_init(X, Y);
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
-    printf( "Y[0] = %+6hi = 0x%04hX ....... y[0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/32768 ); // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
-    printf( "Y[1] = %+6hi = 0x%04hX ....... y[1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/32768 ); // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
+    printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/32768 ); // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
+    printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/32768 ); // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
     
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
@@ -65,7 +65,7 @@ void main(void){
         Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SF
 
         // Display output for each iteration
-        printf( "Y[%2d] = %+6hi = %04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/32768 );
+        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/32768 );
 
     }
 
