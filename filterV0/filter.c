@@ -31,14 +31,14 @@ void main(void){
      * A second order filter uses two previous input/output samples, thus we have:
      * 2 output coefficients and 2 input coefficients + 1 for the current input */
     // Input Coefficients
-    const short int B0 = 0x10C8;
-    const short int B1 = 0x2190;
-    const short int B2 = 0x10C8;
+    const short int B0 = 0x10C8; //<-- TO BE CHANGED
+    const short int B1 = 0x2190; //<-- TO BE CHANGED
+    const short int B2 = 0x10C8; //<-- TO BE CHANGED
     int tmp_B0, tmp_B1, tmp_B2;  // to store terms in the difference equation for each iteration n
 
     // Output Coefficients
-    const short int A1 = 0x5FB7;
-    const short int A2 = 0xDD28; // Note this constant is a negative value (sign 2's complement)
+    const short int A1 = 0x5FB7; //<-- TO BE CHANGED
+    const short int A2 = 0xDD28; //<-- TO BE CHANGED // Note this constant is a negative value (sign 2's complement)
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
 
     // Iniitalize input and output value arrays
