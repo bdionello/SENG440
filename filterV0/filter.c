@@ -53,13 +53,13 @@ void main(void){
     for (i=2; i<100; i++) {
         
         // Multiply Current and Previous Two Scaled Inputs by Input Coefficients then divide by scalefactor and round
-        tmp_B0 = ((int)B0 * (int)X[i  ] + (1 << 14)) >> 15; // Scale Factor = 2^15
-        tmp_B1 = ((int)B1 * (int)X[i-1] + (1 << 14)) >> 15; // Scale Factor = 2^15
-        tmp_B2 = ((int)B2 * (int)X[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        tmp_B0 = ((int)B0 * (int)X[i  ]) >> 15; // Scale Factor = 2^15
+        tmp_B1 = ((int)B1 * (int)X[i-1]) >> 15; // Scale Factor = 2^15
+        tmp_B2 = ((int)B2 * (int)X[i-2]) >> 15; // Scale Factor = 2^15
 
         // Multiply Previous Two Scaled Ouptuts by Ouptut Coefficients then divide by scalefactor and round
-        tmp_A1 = ((int)A1 * (int)Y[i-1] + (1 << 14)) >> 15; // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
-        tmp_A2 = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
+        tmp_A1 = ((int)A1 * (int)Y[i-1]) >> 15; // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
+        tmp_A2 = ((int)A2 * (int)Y[i-2]) >> 15; // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
     
         // Compute the scaled output (result of the scaled difference equation)
         Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SF
