@@ -193,7 +193,7 @@ main:
 	str	r3, [r7, #4]
 	ldrsh	r3, [r7, #22]
 	subs	r2, r5, #2
-	ldr	r1, .L7+12
+	ldr	r1, .L7+8
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
