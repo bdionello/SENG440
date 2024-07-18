@@ -18,14 +18,14 @@ void filter_init(short int *X, short int *Y){
      *   to avoid undefined behaviour that could occur if
      *   the arrays X and Y contained random garbage */
     // SCALED FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
-    X[0] = (short int)0x8001; //-32767 --> Normalized to x[0] = ~ -1 (-0.99997)
-    X[1] = (short int)0x8001; //-32767 --> Normalized to x[1] = ~ -1 (-0.99997)
+    X[0] = (short int)0x8001; //-32767 --> Normalized (X[0] / 2^15) to x[0] = ~ -1 (-0.99997)
+    X[1] = (short int)0x8001; //-32767 --> Normalized (X[1] / 2^15) to x[1] = ~ -1 (-0.99997)
     for (i=2; i<100; i++)
-        X[i] = (short int)0x7FFF; //+32767 --> Normalized to x[i] = ~ +1 (+0.99997)
+        X[i] = (short int)0x7FFF; //+32767 --> Normalized to (X[i] / 2^15) x[i] = ~ +1 (+0.99997)
 
     // SCALED FILTER OUTPUT INITIAL CONDITIONS
-    Y[0] = (short int)0xC000; //-16384 --> Normalized to y[0] = ~ -1 (-0.99997)
-    Y[1] = (short int)0xC000; //-16384 --> Normalized to y[1] = ~ -1 (-0.99997)
+    Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 }
 
 void main(void){
