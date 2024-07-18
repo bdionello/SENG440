@@ -28,10 +28,12 @@ void filter_init(short int *X, short int *Y){
 short int short_int_clipping ( int a) {
     int tmp ;
     tmp = a;
-    if( tmp >= (int) (+32767) )
-    tmp = (int) (+32767) ;
-    if( tmp <= (int) ( -32767) )
-    tmp = (int) ( -32767) ;
+    if( tmp >= (int) (+32767) ){
+        tmp = (int) (+32767) ;
+    }
+    if( tmp <= (int) ( -32767) ){
+        tmp = (int) ( -32767) ;
+    }
     return( (short int) tmp );
 }
 
