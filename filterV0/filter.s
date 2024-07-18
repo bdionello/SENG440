@@ -64,6 +64,48 @@ filter_init:
 	pop	{r4, r7}
 	bx	lr
 	.size	filter_init, .-filter_init
+	.align	1
+	.global	short_int_clipping
+	.syntax unified
+	.thumb
+	.thumb_func
+	.fpu vfpv3-d16
+	.type	short_int_clipping, %function
+short_int_clipping:
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	push	{r7}
+	sub	sp, sp, #20
+	add	r7, sp, #0
+	str	r0, [r7, #4]
+	ldr	r3, [r7, #4]
+	str	r3, [r7, #12]
+	ldr	r3, [r7, #12]
+	movw	r2, #32766
+	cmp	r3, r2
+	ble	.L5
+	movw	r3, #32767
+	str	r3, [r7, #12]
+.L5:
+	ldr	r2, [r7, #12]
+	movw	r3, #32770
+	movt	r3, 65535
+	cmp	r2, r3
+	bge	.L6
+	movw	r3, #32769
+	movt	r3, 65535
+	str	r3, [r7, #12]
+.L6:
+	ldr	r3, [r7, #12]
+	sxth	r3, r3
+	mov	r0, r3
+	adds	r7, r7, #20
+	mov	sp, r7
+	@ sp needed
+	ldr	r7, [sp], #4
+	bx	lr
+	.size	short_int_clipping, .-short_int_clipping
 	.section	.rodata
 	.align	2
 .LC0:
@@ -89,7 +131,7 @@ main:
 	push	{r4, r5, r7, lr}
 	sub	sp, sp, #48
 	add	r7, sp, #16
-	ldr	r4, .L7+4
+	ldr	r4, .L11+4
 .LPIC0:
 	add	r4, pc
 	movw	r3, #4296
@@ -102,62 +144,62 @@ main:
 	strh	r3, [r7, #24]	@ movhi
 	movw	r3, #56616
 	strh	r3, [r7, #22]	@ movhi
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	mov	r1, r3
-	ldr	r3, .L7+12
+	ldr	r3, .L11+12
 	ldr	r3, [r4, r3]
 	mov	r0, r3
 	bl	filter_init(PLT)
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3]
 	mov	r1, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3]
 	mov	r2, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3]
 	vmov	s15, r3	@ int
 	vcvt.f32.s32	s14, s15
-	vldr.32	s13, .L7
+	vldr.32	s13, .L11
 	vdiv.f32	s15, s14, s13
 	vcvt.f64.f32	d7, s15
 	vstr.64	d7, [sp]
-	ldr	r3, .L7+16
+	ldr	r3, .L11+16
 .LPIC1:
 	add	r3, pc
 	mov	r0, r3
 	bl	printf(PLT)
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, #2]
 	mov	r1, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, #2]
 	mov	r2, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, #2]
 	vmov	s15, r3	@ int
 	vcvt.f32.s32	s14, s15
-	vldr.32	s13, .L7
+	vldr.32	s13, .L11
 	vdiv.f32	s15, s14, s13
 	vcvt.f64.f32	d7, s15
 	vstr.64	d7, [sp]
-	ldr	r3, .L7+20
+	ldr	r3, .L11+20
 .LPIC2:
 	add	r3, pc
 	mov	r0, r3
 	bl	printf(PLT)
 	movs	r5, #2
-	b	.L5
-.L6:
+	b	.L9
+.L10:
 	ldrsh	r3, [r7, #30]
-	ldr	r2, .L7+12
+	ldr	r2, .L11+12
 	ldr	r2, [r4, r2]
 	ldrsh	r2, [r2, r5, lsl #1]
 	mul	r3, r2, r3
@@ -166,7 +208,7 @@ main:
 	str	r3, [r7, #16]
 	ldrsh	r3, [r7, #28]
 	subs	r2, r5, #1
-	ldr	r1, .L7+12
+	ldr	r1, .L11+12
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
@@ -175,7 +217,7 @@ main:
 	str	r3, [r7, #12]
 	ldrsh	r3, [r7, #26]
 	subs	r2, r5, #2
-	ldr	r1, .L7+12
+	ldr	r1, .L11+12
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
@@ -184,7 +226,7 @@ main:
 	str	r3, [r7, #8]
 	ldrsh	r3, [r7, #24]
 	subs	r2, r5, #1
-	ldr	r1, .L7+8
+	ldr	r1, .L11+8
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
@@ -193,71 +235,65 @@ main:
 	str	r3, [r7, #4]
 	ldrsh	r3, [r7, #22]
 	subs	r2, r5, #2
-	ldr	r1, .L7+8
+	ldr	r1, .L11+8
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
 	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7]
-	ldr	r3, [r7, #16]
-	uxth	r2, r3
+	ldr	r2, [r7, #16]
 	ldr	r3, [r7, #12]
-	uxth	r3, r3
-	add	r3, r3, r2
-	uxth	r2, r3
+	add	r2, r2, r3
 	ldr	r3, [r7, #8]
-	uxth	r3, r3
-	add	r3, r3, r2
-	uxth	r2, r3
+	add	r2, r2, r3
 	ldr	r3, [r7, #4]
-	uxth	r3, r3
-	add	r3, r3, r2
-	uxth	r2, r3
+	add	r2, r2, r3
 	ldr	r3, [r7]
-	uxth	r3, r3
 	add	r3, r3, r2
-	uxth	r3, r3
-	sxth	r2, r3
-	ldr	r3, .L7+8
+	mov	r0, r3
+	bl	short_int_clipping(PLT)
+	mov	r3, r0
+	mov	r2, r3
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	strh	r2, [r3, r5, lsl #1]	@ movhi
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, r5, lsl #1]
 	mov	r2, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, r5, lsl #1]
 	mov	r1, r3
-	ldr	r3, .L7+8
+	ldr	r3, .L11+8
 	ldr	r3, [r4, r3]
 	ldrsh	r3, [r3, r5, lsl #1]
 	vmov	s15, r3	@ int
 	vcvt.f32.s32	s14, s15
-	vldr.32	s13, .L7
+	vldr.32	s13, .L11
 	vdiv.f32	s15, s14, s13
 	vcvt.f64.f32	d7, s15
 	vstr.64	d7, [sp, #8]
 	str	r5, [sp]
 	mov	r3, r1
 	mov	r1, r5
-	ldr	r0, .L7+24
+	ldr	r0, .L11+24
 .LPIC3:
 	add	r0, pc
 	bl	printf(PLT)
 	adds	r5, r5, #1
-.L5:
+.L9:
 	cmp	r5, #99
-	ble	.L6
+	ble	.L10
 	nop
 	adds	r7, r7, #32
 	mov	sp, r7
 	@ sp needed
 	pop	{r4, r5, r7, pc}
-.L8:
+.L12:
 	.align	2
-.L7:
+.L11:
 	.word	1191182336
 	.word	_GLOBAL_OFFSET_TABLE_-(.LPIC0+4)
 	.word	Y(GOT)
