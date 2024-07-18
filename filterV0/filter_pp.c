@@ -776,7 +776,7 @@ void main(void){
 
 
         tmp_A1 = ((int)A1 * (int)Y[i-1] + (1 << 14)) >> 15;
-        tmp_A2 = ((int)A2 * (int)X[i-2] + (1 << 14)) >> 15;
+        tmp_A2 = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15;
 
 
         Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2);
