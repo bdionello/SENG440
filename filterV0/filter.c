@@ -25,6 +25,16 @@ void filter_init(short int *X, short int *Y){
     Y[1] = (short int)0x8001; //-32767
 }
 
+short int short_int_clipping ( int a) {
+    int tmp ;
+    tmp = a;
+    if( tmp >= (int) (+32767) )
+    tmp = (int) (+32767) ;
+    if( tmp <= (int) ( -32767) )
+    tmp = (int) ( -32767) ;
+    return( (short int) tmp );
+}
+
 void main(void){
 
     /* The order of a filter indicates the maximum of the number of previous input/output samples in the difference equation
@@ -62,7 +72,7 @@ void main(void){
         tmp_A2 = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
     
         // Compute the scaled output (result of the scaled difference equation)
-        Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SF
+        Y[i] = short_int_clipping ( tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2 );
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/32768 );
