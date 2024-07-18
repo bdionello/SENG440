@@ -161,7 +161,6 @@ main:
 	ldr	r2, [r4, r2]
 	ldrsh	r2, [r2, r5, lsl #1]
 	mul	r3, r2, r3
-	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7, #16]
 	ldrsh	r3, [r7, #28]
@@ -170,7 +169,6 @@ main:
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
-	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7, #12]
 	ldrsh	r3, [r7, #26]
@@ -179,7 +177,6 @@ main:
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
-	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7, #8]
 	ldrsh	r3, [r7, #24]
@@ -188,7 +185,6 @@ main:
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
-	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7, #4]
 	ldrsh	r3, [r7, #22]
@@ -197,7 +193,6 @@ main:
 	ldr	r1, [r4, r1]
 	ldrsh	r2, [r1, r2, lsl #1]
 	mul	r3, r2, r3
-	add	r3, r3, #16384
 	asrs	r3, r3, #15
 	str	r3, [r7]
 	ldr	r3, [r7, #16]
