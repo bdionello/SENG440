@@ -24,8 +24,8 @@ void filter_init(short int *X, short int *Y){
         X[i] = (short int)0x7FFF; //+32767 --> Normalized to x[i] = ~ +1 (+0.99997)
 
     // SCALED FILTER OUTPUT INITIAL CONDITIONS
-    Y[0] = (short int)0x8001; //-32767 --> Normalized to y[0] = ~ -1 (-0.99997)
-    Y[1] = (short int)0x8001; //-32767 --> Normalized to y[1] = ~ -1 (-0.99997)
+    Y[0] = (short int)0xC000; //-16384 --> Normalized to y[0] = ~ -1 (-0.99997)
+    Y[1] = (short int)0xC000; //-16384 --> Normalized to y[1] = ~ -1 (-0.99997)
 }
 
 void main(void){
@@ -45,14 +45,15 @@ void main(void){
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
 
     // Iniitalize input and output value arrays
-    filter_init(X, Y);
+    filter_init(X, Y); // Shouldn't this be &X and &Y ??? I thought filter_init has pointers as arguments ???
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
-    printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // Scale Factor = 2^14; used to be 2^15 = 32768
-    printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // Scale Factor = 2^14; used to be 2^15 = 32768
+    printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
+    printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
+
     for (i=2; i<100; i++) {
 
         /* Note: When a 32-bit processor performs operations on 16-bit fixed-point numbers, 
@@ -73,7 +74,7 @@ void main(void){
         Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
 
         // Display output for each iteration
-        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // Scale Factor = 2^14; used to be 2^15 = 32768
+        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
 
     }
 
