@@ -41,11 +41,11 @@ void main(void){
 
     // Output Coefficients (See Calculations in Report)
     const short int A1 = 0x74A7; //
-    const short int A2 = 0x94D7; // Note this constant is a negative value (sign 2's complement)
+    const short int A2 = 0x94D7; // note this constant is a negative value (sign 2's complement)
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
 
     // Iniitalize input and output value arrays
-    filter_init(X, Y); // Shouldn't this be &X and &Y ??? I thought filter_init has pointers as arguments ???
+    filter_init(X, Y);
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
