@@ -44,7 +44,6 @@ void main(void){
     int tmp_B0, tmp_B1, tmp_B2;               
     int tmp_B0_nxt1, tmp_B1_nxt1, tmp_B2_nxt1;
     int tmp_B0_nxt2, tmp_B1_nxt2, tmp_B2_nxt2;
-    int tmp_B0_nxt3, tmp_B1_nxt3, tmp_B2_nxt3;
 
     // Output Coefficients (See Calculations in Report)
     const short int A1 = 0x74A7;
@@ -52,7 +51,6 @@ void main(void){
     int tmp_A1, tmp_A2;          
     int tmp_A1_nxt1, tmp_A2_nxt1;
     int tmp_A1_nxt2, tmp_A2_nxt2;
-    int tmp_A1_nxt3, tmp_A2_nxt3;
 
     // Iniitalize input and output value arrays
     filter_init(X, Y);
@@ -64,7 +62,7 @@ void main(void){
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
 
-    for (i=2; i<102; i+=4) {
+    for (i=2; i<101; i+=3) {
 
         /* Note: When a 32-bit processor performs operations on 16-bit fixed-point numbers, 
          * intermediate results can still use the full 32-bit range. 
@@ -94,20 +92,11 @@ void main(void){
         tmp_A2_nxt2 = ((int)A2 * (int)Y[i  ] + (1 << 14)) >> 15;
         tmp_A1_nxt2 = ((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14;
         Y[i+2]      = (short int)(tmp_B0_nxt2 + tmp_B1_nxt2 + tmp_B2_nxt2 + tmp_A1_nxt2 + tmp_A2_nxt2);
-        
-        // Compute the scaled output for iteration i+3 (result of the scaled difference equation)
-        tmp_B0      = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24;
-        tmp_B1      = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23;
-        tmp_B2      = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24;
-        tmp_A2      = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15;
-        tmp_A1      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14;
-        Y[i+3]      = (short int)(tmp_B0_nxt3 + tmp_B1_nxt3 + tmp_B2_nxt3 + tmp_A1_nxt3 + tmp_A2_nxt3);
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14;
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i+1, Y[i+1], Y[i+1], i+1, ((float)Y[i+1])/16384 ); // SFy = 2^14;
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i+2, Y[i+2], Y[i+2], i+2, ((float)Y[i+2])/16384 ); // SFy = 2^14;
-        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i+3, Y[i+3], Y[i+3], i+3, ((float)Y[i+3])/16384 ); // SFy = 2^14;
 
     }
 
