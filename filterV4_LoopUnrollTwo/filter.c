@@ -69,23 +69,24 @@ void main(void){
         
         // Multiply Current and Previous Two Scaled Inputs by Input Coefficients then divide by scalefactor and round
         tmp_B0     = ((int)B0 * (int)X[i  ] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_B0_nxt = ((int)B0 * (int)X[i+1] + (1 << 23)) >> 24; // Scale Factor = 2^24
 
         tmp_B1     = ((int)B1 * (int)X[i-1] + (1 << 22)) >> 23; // Scale Factor = 2^23
-        tmp_B1_nxt = ((int)B1 * (int)X[i  ] + (1 << 22)) >> 23; // Scale Factor = 2^23
 
         tmp_B2     = ((int)B2 * (int)X[i-2] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_B2_nxt = ((int)B2 * (int)X[i-1] + (1 << 23)) >> 24; // Scale Factor = 2^24
 
         // Multiply Previous Two Scaled Ouptuts by Ouptut Coefficients then divide by scalefactor and round
         tmp_A1     = ((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14; // Scale Factor = 2^14
-        tmp_A1_nxt = ((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14; // Scale Factor = 2^14
 
         tmp_A2     = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15
-        tmp_A2_nxt = ((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15; // Scale Factor = 2^15
     
-        // Compute the scaled output (result of the scaled difference equation)
         Y[i]   = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
+        
+        tmp_B0_nxt = ((int)B0 * (int)X[i+1] + (1 << 23)) >> 24; // Scale Factor = 2^24
+        tmp_B1_nxt = ((int)B1 * (int)X[i  ] + (1 << 22)) >> 23; // Scale Factor = 2^23
+        tmp_B2_nxt = ((int)B2 * (int)X[i-1] + (1 << 23)) >> 24; // Scale Factor = 2^24
+        tmp_A1_nxt = ((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14; // Scale Factor = 2^14
+        tmp_A2_nxt = ((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        // Compute the scaled output (result of the scaled difference equation)
         Y[i+1] = (short int)(tmp_B0_nxt + tmp_B1_nxt + tmp_B2_nxt + tmp_A1_nxt + tmp_A2_nxt); // Recall: y[n] = Y[n] / SFy
 
         // Display output for each iteration
