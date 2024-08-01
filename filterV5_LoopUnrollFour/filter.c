@@ -74,33 +74,33 @@ void main(void){
         tmp_B0      = ((int)B0 * (int)X[i  ] + (1 << 23)) >> 24; // Scale Factor = 2^24
         tmp_B1      = ((int)B1 * (int)X[i-1] + (1 << 22)) >> 23; // Scale Factor = 2^23
         tmp_B2      = ((int)B2 * (int)X[i-2] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_A1      = ((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14; // Scale Factor = 2^14
         tmp_A2      = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        tmp_A1      = ((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14; // Scale Factor = 2^14
         Y[i]        = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
         
         // Compute the scaled output for iteration i+1 (result of the scaled difference equation)
         tmp_B0_nxt1 = ((int)B0 * (int)X[i+1] + (1 << 23)) >> 24; // Scale Factor = 2^24
         tmp_B1_nxt1 = ((int)B1 * (int)X[i  ] + (1 << 22)) >> 23; // Scale Factor = 2^23
         tmp_B2_nxt1 = ((int)B2 * (int)X[i-1] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_A1_nxt1 = ((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14; // Scale Factor = 2^14
         tmp_A2_nxt1 = ((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        tmp_A1_nxt1 = ((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14; // Scale Factor = 2^14
         Y[i+1]      = (short int)(tmp_B0_nxt1 + tmp_B1_nxt1 + tmp_B2_nxt1 + tmp_A1_nxt1 + tmp_A2_nxt1); // Recall: y[n] = Y[n] / SFy
 
         // Compute the scaled output for iteration i+2 (result of the scaled difference equation)
         tmp_B0_nxt2 = ((int)B0 * (int)X[i+2] + (1 << 23)) >> 24; // Scale Factor = 2^24
         tmp_B1_nxt2 = ((int)B1 * (int)X[i+1] + (1 << 22)) >> 23; // Scale Factor = 2^23
         tmp_B2_nxt2 = ((int)B2 * (int)X[i  ] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_A1_nxt2 = ((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14; // Scale Factor = 2^14
         tmp_A2_nxt2 = ((int)A2 * (int)Y[i  ] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        tmp_A1_nxt2 = ((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14; // Scale Factor = 2^14
         Y[i+2]      = (short int)(tmp_B0_nxt2 + tmp_B1_nxt2 + tmp_B2_nxt2 + tmp_A1_nxt2 + tmp_A2_nxt2); // Recall: y[n] = Y[n] / SFy
         
         // Compute the scaled output for iteration i+3 (result of the scaled difference equation)
         tmp_B0      = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24; // Scale Factor = 2^24
         tmp_B1      = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23; // Scale Factor = 2^23
         tmp_B2      = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_A1      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14; // Scale Factor = 2^14
         tmp_A2      = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15; // Scale Factor = 2^15
-        Y[i+3]        = (short int)(tmp_B0_nxt3 + tmp_B1_nxt3 + tmp_B2_nxt3 + tmp_A1_nxt3 + tmp_A2_nxt3); // Recall: y[n] = Y[n] / SFy
+        tmp_A1      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14; // Scale Factor = 2^14
+        Y[i+3]      = (short int)(tmp_B0_nxt3 + tmp_B1_nxt3 + tmp_B2_nxt3 + tmp_A1_nxt3 + tmp_A2_nxt3); // Recall: y[n] = Y[n] / SFy
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14;
