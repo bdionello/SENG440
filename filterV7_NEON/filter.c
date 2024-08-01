@@ -1,8 +1,3 @@
-/* SENG 440 - Digital Filters Final Project */
-
-// Compile in the terminal using the following command:
-// gcc -static -O3 -mfpu=neon filter.c -o filter.exe
-
 #include <stdio.h>
 #include <arm_neon.h>
 
@@ -26,17 +21,15 @@ inline void filter_init(short int *X, short int *Y){
 
 void main(void){
     // Input Coefficients (See Calculations in Report)
-    const short int B0 = 0x76B0;
-    const short int B1 = 0x76B0;
-    const short int B2 = 0x76B0;
-    int tmp_B0, tmp_B1, tmp_B2;  // to store terms in the difference equation for each iteration n
+    const int16x4_t B0 = {0x76B0, 0x76B0, 0x76B0, 0x76B0};
+    const int16x4_t B1 = {0x76B0, 0x76B0, 0x76B0, 0x76B0};
+    const int16x4_t B2 = {0x76B0, 0x76B0, 0x76B0, 0x76B0};
 
     // Output Coefficients (See Calculations in Report)
-    const short int A1 = 0x74A7;
-    const short int A2 = 0x94D7; // note this constant is a negative value (sign 2's complement)
-    int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
+    const int16x4_t A1 = {0x74A7, 0x74A7, 0x74A7, 0x74A7};
+    const int16x4_t A2 = {0x94D7, 0x94D7, 0x94D7, 0x94D7};
 
-    // Initialize input and output value arrays
+    // Iniitalize input and output value arrays
     filter_init(X, Y);
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
@@ -45,19 +38,10 @@ void main(void){
 
     // NEON Intrinsics Variables
     int16x4_t x_curr, x_prev1, x_prev2, y_prev1, y_prev2;
-    int32x4_t b0, b1, b2, a1, a2, tmp_B, tmp_A, sum;
-
-    // Load coefficients into NEON registers
-    b0 = vdupq_n_s32(B0);
-    b1 = vdupq_n_s32(B1);
-    b2 = vdupq_n_s32(B2);
-    a1 = vdupq_n_s32(A1);
-    a2 = vdupq_n_s32(A2);
+    int32x4_t tmp_B0, tmp_B1, tmp_B2, tmp_A1, tmp_A2, sum;
 
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
-    register int i;
-
-    for (i = 2; i < 100; i += 4) { // Unroll loop by processing 4 elements at a time
+    for (int i = 2; i < 100; i += 4) { // Unroll loop by processing 4 elements at a time
         // Load current and previous inputs and outputs into NEON registers
         x_curr = vld1_s16(&X[i]);
         x_prev1 = vld1_s16(&X[i - 1]);
@@ -66,23 +50,23 @@ void main(void){
         y_prev2 = vld1_s16(&Y[i - 2]);
 
         // Perform multiplication and scaling for inputs
-        tmp_B = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), b0, x_curr), 24);
-        tmp_B = vaddq_s32(tmp_B, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 22), b1, x_prev1), 23));
-        tmp_B = vaddq_s32(tmp_B, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), b2, x_prev2), 24));
+        tmp_B0 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B0, x_curr), 24);
+        tmp_B1 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 22), B1, x_prev1), 23);
+        tmp_B2 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B2, x_prev2), 24);
 
         // Perform multiplication and scaling for outputs
-        tmp_A = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 13), a1, y_prev1), 14);
-        tmp_A = vaddq_s32(tmp_A, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 14), a2, y_prev2), 15));
+        tmp_A1 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 13), A1, y_prev1), 14);
+        tmp_A2 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 14), A2, y_prev2), 15);
 
         // Compute the scaled output (result of the scaled difference equation)
-        sum = vaddq_s32(tmp_B, tmp_A);
+        sum = vaddq_s32(vaddq_s32(tmp_B0, tmp_B1), vaddq_s32(tmp_B2, vaddq_s32(tmp_A1, tmp_A2)));
         int16x4_t result = vmovn_s32(sum); // Narrow to 16-bit result
 
         // Store the result
         vst1_s16(&Y[i], result);
 
         // Display output for each iteration
-        for (int j = 0; j < 4; j++) {
+        for (int j = 0; j < 4 && i + j < 100; j++) {
             printf("Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i + j, Y[i + j], Y[i + j], i + j, ((float)Y[i + j]) / 16384);
         }
     }
