@@ -1,3 +1,8 @@
+/* SENG 440 - Digital Filters Final Project */
+
+// Compile in the terminal using the following command:
+// gcc filter.c -o filter.exe
+
 # include <stdio.h>
 
 // Note: short int -> 16 bits
