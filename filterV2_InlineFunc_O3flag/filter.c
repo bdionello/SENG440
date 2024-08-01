@@ -33,7 +33,8 @@ inline void filter_init(short int *X, short int *Y){
 
 void main(void){
 
-    /* The order of a filter indicates the maximum of the number of previous input/output samples in the difference equation
+    /* The order of a filter indicates the maximum of the number of previous input/output 
+     * samples in the difference equation
      * A second order filter uses two previous input/output samples, thus we have:
      * 2 output coefficients and 2 input coefficients + 1 for the current input */
     // Input Coefficients (See Calculations in Report)
