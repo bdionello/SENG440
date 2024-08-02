@@ -99,4 +99,4 @@ Y[97] = +16346 = 0x3FDA ....... y[97] =  0.99768
 Y[98] = +16347 = 0x3FDB ....... y[98] =  0.99774
 Y[99] = +16348 = 0x3FDC ....... y[99] =  0.99780
 Y[100] = +16289 = 0x3FA1 ....... y[100] =  0.99420
-Elapsed time: 20 milliseconds
+Elapsed time: 22 milliseconds
