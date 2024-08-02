@@ -56,7 +56,6 @@ void main(void){
     
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
-
     for (i=2; i<100; i++) {
 
         /* Note: When a 32-bit processor performs operations on 16-bit fixed-point numbers, 
