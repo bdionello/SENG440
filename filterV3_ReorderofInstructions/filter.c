@@ -1,7 +1,7 @@
 /* SENG 440 - Digital Filters Final Project */
 
 // Compile in the terminal using the following command:
-// gcc -static -O3 filter.c -o filter.exe
+// gcc filter.c -o filter.exe
 
 # include <stdio.h>
 
@@ -12,7 +12,7 @@ short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed inte
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
 // This Function defines the large step input for x[n] and initial conditions on y[n]
-inline void filter_init(short int *X, short int *Y){
+static inline void filter_init(short int *X, short int *Y){
 
     register int i; // loop counter
 
