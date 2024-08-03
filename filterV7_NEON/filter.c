@@ -131,7 +131,7 @@ void main(void){
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14;
-        printf("\n");
+        printf("\n-----------------------\n");
 
         // int Bunscaled[4];
         // int Aunscaled[4]; 
