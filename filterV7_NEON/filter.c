@@ -70,8 +70,8 @@ void main(void){
         short int tmp_Y[4] = {       &Y[i-1], &Y[i-2]};
 
         // Load IO into NEON registers
-        NEON_X = vld1_s16( tmp_X );
-        NEON_Y = vld1_s16( tmp_Y );
+        NEON_X = vld1q_s32( tmp_X );
+        NEON_Y = vld1q_s32( tmp_Y );
 
         // Multiply, Round and Scale
         int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X); //<----------------------------arguments might need ot be int32x4_t
