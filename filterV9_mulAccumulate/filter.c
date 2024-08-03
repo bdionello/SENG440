@@ -45,8 +45,8 @@ void main(void){
     Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1 
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
-    printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
-    printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
+   printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
+   printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
@@ -63,7 +63,7 @@ void main(void){
                 + (((int)A1*(int)Y[i-1]+(1<<13))>>14) + (((int)A2*(int)Y[i-2]+(1<<14))>>15); // Scale Factor = 2^24
 
         // Display output for each iteration
-        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
+       printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
 
     }
 
