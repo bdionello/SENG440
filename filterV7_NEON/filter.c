@@ -54,10 +54,10 @@ void main(void){
 
     printf("NEON_B: ");
     print_int32x4_t(NEON_B);
-    print("\n");
+    printf("\n");
     print("NEON_A: ");
     print_int32x4_t(NEON_A);
-    print("\n");
+    printf("\n");
 
     // Inputs and Outputs
     int32x4_t NEON_X;
@@ -91,10 +91,10 @@ void main(void){
 
         printf("NEON_X: ");
         print_int32x4_t(NEON_X);
-        print("\n");
+        printf("\n");
         printf("NEON_Y: ");
         print_int32x4_t(NEON_Y);
-        print("\n");
+        printf("\n");
 
         // Multiply, Round and Scale
         int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X); //<----------------------------arguments might need ot be int32x4_t
@@ -104,10 +104,10 @@ void main(void){
 
         printf("NEON_BX: ");
         print_int32x4_t(NEON_BX);
-        print("\n");
+        printf("\n");
         printf("NEON_BX_S: ");
         print_int32x4_t(NEON_BX_S);
-        print("\n");
+        printf("\n");
 
         int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y); //<----------------------------arguments might need ot be int32x4_t
         int32x4_t NEON_AY_S = vshrq_n_s32(NEON_AY, 14); // reduced all SFs for efficiency //<----------------argument types are correct
@@ -116,10 +116,10 @@ void main(void){
 
         printf("NEON_AY: ");
         print_int32x4_t(NEON_AY);
-        print("\n");
+        printf("\n");
         printf("NEON_AY_S: ");
         print_int32x4_t(NEON_AY_S);
-        print("\n");
+        printf("\n");
 
         // Store results in a new array for access during accumulate
         int tmp_a[4];
