@@ -8,8 +8,6 @@
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
 
-//short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed integers)
-short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 int X[64] = { 0x80018001, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
 			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
 			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
@@ -24,6 +22,8 @@ int X[64] = { 0x80018001, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
             0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
             0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
 };
+short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
+
 
 void main(void){
 
@@ -44,7 +44,7 @@ void main(void){
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
     int tmp_A1_nxt, tmp_A2_nxt;  // to store terms in the difference equation for each iteration n
 
-    // Iniitalize input value arrays
+    // Iniitalize output value array
     Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
     Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1    
 

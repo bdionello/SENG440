@@ -8,27 +8,21 @@
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
 
-short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed integers)
+int X[64] = { 0x80018001, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+			0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+            0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF, 0x7FFF7FFF,
+};
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
-
-void filter_init(short int *X, short int *Y){
-
-    register int i; // loop counter
-
-    /* Define Initial Conditions for Input and Output *
-     * - This provides a consistent starting point helping
-     *   to avoid undefined behaviour that could occur if
-     *   the arrays X and Y contained random garbage */
-    // FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
-    X[0] = (short int)0x8001; //-32767
-    X[1] = (short int)0x8001; //-32767
-    for (i=2; i<100; i++)
-        X[i] = (short int)0x7FFF; //+32767
-
-    // FILTER OUTPUT INITIAL CONDITIONS
-    Y[0] = (short int)0x8001; //-32767
-    Y[1] = (short int)0x8001; //-32767
-}
 
 void main(void){
 
@@ -46,8 +40,9 @@ void main(void){
     const short int A2 = 0xDD28; //<-- TO BE CHANGED // Note this constant is a negative value (sign 2's complement)
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
 
-    // Iniitalize input and output value arrays
-    filter_init(X, Y);
+    // Iniitalize output value array
+    Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1 
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/32768 ); // Scale Factor = 2^15 = 32768 <- might want to try changing this to 2^14?
