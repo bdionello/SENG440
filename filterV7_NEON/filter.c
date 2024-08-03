@@ -40,8 +40,8 @@ void main(void){
     const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
     const short int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
 
-    int32x4_t NEON_B = vld1_s16( B ); // Load Input Coefficients into NEON d-register (64-bits)
-    int32x4_t NEON_A = vld1_s16( A ); // Load Output Coefficients into NEON d-register (64-bits)
+    int32x4_t NEON_B = vld1q_s32( B ); // Load Input Coefficients into NEON d-register (64-bits)
+    int32x4_t NEON_A = vld1q_s32( A ); // Load Output Coefficients into NEON d-register (64-bits)
 
     // Inputs and Outputs
     int32x4_t NEON_X;
