@@ -34,20 +34,6 @@ void filter_init(short int *X, short int *Y){
 
 void main(void){
 
-    //const short int Coeffs[8] = {0x76B0, 0x76B0, 0x76B0, 0x74A7, 0x94D7}; // {B0, B1.B2, A1, A2}
-    
-    const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
-    const short int A[4] = {0x74A7, 0x94D7}; // {A1, A2}
-    
-    int16x4_t NEON_B;
-    int16x4_t NEON_X;
-
-    int16x4_t NEON_A;
-    int16x4_t NEON_Y;
-
-    NEON_B = vld1_s16( B ); // Load Coefficients into NEON d-register (64-bits)
-    NEON_A = vld1_s16( A ); // Load Coefficients into NEON d-register (64-bits)
-
     // Iniitalize input and output value arrays
     filter_init(X, Y);
 
@@ -55,11 +41,74 @@ void main(void){
     printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     
+    //Coeffincients
+    const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
+    const short int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
+
+    int16x4_t NEON_B = vld1_s16( B ); // Load Coefficients into NEON d-register (64-bits)
+    int16x4_t NEON_A = vld1_s16( A ); // Load Coefficients into NEON d-register (64-bits)
+
+    // Input and Outputs
+    int16x4_t NEON_X;
+    int16x4_t NEON_Y;
+
+    // Rounding bits
+    const int roundbitsB[4] = {(1 << 23), (1 << 22), (1 << 23)};
+    const int roundbitsA[4] = {(1 < 13), (1 << 14)};
+
+    int32x4_t NEON_roundbitsB = vld1q_s32( roundbitsB ); // Load Coefficients into NEON q-register (128-bits)
+    int32x4_t NEON_roundbitsA = vld1q_s32( roundbitsA ); // Load Coefficients into NEON q-register (128-bits)
+    
+    // Scale Factors
+    const int sfB[4] = {24, 23, 24};
+    const int sfA[4] = {14, 15};
+
+    uint16x4_t NEON_sfB = vld1_u16( sfB );
+    uint16x4_t NEON_sfA = vld1_u16( sfA );
+
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
     for (i=2; i<100; i++) {
 
-        NEON_XYvals = vld1q_s16({&X[i], &X[i-1], &X[i-2], &Y[i-1], &Y[i-2]});
+        // Inputs and Outputs
+        short int tmp_X[4] = {&X[i], &X[i-1], &X[i-2]};
+        short int tmp_Y[4] = {       &Y[i-1], &Y[i-2]};
+
+        // Load IO into NEON registers
+        NEON_X = vld1_s16( tmp_X );
+        NEON_Y = vld1_s16( tmp_Y );
+
+        // Multiply, Round and Scale
+        int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X);
+        int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB);
+        int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency
+
+        int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y);
+        int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA);
+        int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency
+
+        // Store results in a new array for access during accumulate
+        int a[4];
+        int b[4];
+
+        vst1q_s32(a, NEON_AY_R_S);
+        vst1q_s32(b, NEON_BX_R_S);
+
+        Y[i] = (short int)(b[0] + b[1] + b[2] + a[0] + a[1]);
+
+        // Display output for each iteration
+        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14;
+
+        // int Bunscaled[4];
+        // int Aunscaled[4]; 
+        
+        // vst1q_s32(NEON_BX_R, Bunscaled);
+        // vst1q_s32(NEON_AY_R, Aunscaled);
+
+        // Bunscaled[0] = Bunscaled[0] >> 24;
+        // Aunscaled =
+
+
 
         /* Note: When a 32-bit processor performs operations on 16-bit fixed-point numbers, 
          * intermediate results can still use the full 32-bit range. 
@@ -67,19 +116,16 @@ void main(void){
          */
         
         // Multiply Current and Previous Two Scaled Inputs by Input Coefficients then divide by scalefactor and round
-        tmp_B0 = ((int)B0 * (int)X[i  ] + (1 << 23)) >> 24; // Scale Factor = 2^24
-        tmp_B1 = ((int)B1 * (int)X[i-1] + (1 << 22)) >> 23; // Scale Factor = 2^23
-        tmp_B2 = ((int)B2 * (int)X[i-2] + (1 << 23)) >> 24; // Scale Factor = 2^24
+        // tmp_B0 = ((int)B0 * (int)X[i  ] + (1 << 23)) >> 24; // Scale Factor = 2^24
+        // tmp_B1 = ((int)B1 * (int)X[i-1] + (1 << 22)) >> 23; // Scale Factor = 2^23
+        // tmp_B2 = ((int)B2 * (int)X[i-2] + (1 << 23)) >> 24; // Scale Factor = 2^24
 
-        // Multiply Previous Two Scaled Ouptuts by Ouptut Coefficients then divide by scalefactor and round
-        tmp_A1 = ((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14; // Scale Factor = 2^14
-        tmp_A2 = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15
+        // // Multiply Previous Two Scaled Ouptuts by Ouptut Coefficients then divide by scalefactor and round
+        // tmp_A1 = ((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14; // Scale Factor = 2^14
+        // tmp_A2 = ((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15; // Scale Factor = 2^15
     
-        // Compute the scaled output (result of the scaled difference equation)
-        Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
-
-        // Display output for each iteration
-        printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
+        // // Compute the scaled output (result of the scaled difference equation)
+        // Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
 
     }
 
