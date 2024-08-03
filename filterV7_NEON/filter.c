@@ -47,7 +47,7 @@ void main(void){
     
     //Coefficients
     const int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
-    const int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
+    const int A[4] = {0x74A7, -27433};         // {A1, A2}
 
     int32x4_t NEON_B = vld1q_s32( B ); // Load Input Coefficients into NEON d-register (64-bits)
     int32x4_t NEON_A = vld1q_s32( A ); // Load Output Coefficients into NEON d-register (64-bits)
