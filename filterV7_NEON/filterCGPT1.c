@@ -46,7 +46,7 @@ int main(void) {
     const int16x4_t A2 = vdup_n_s16(0x94D7);
 
     // Initialize input and output value arrays
-    filter_init(X, Y);
+    //filter_init(X, Y);
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf("Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0]) / 16384);
