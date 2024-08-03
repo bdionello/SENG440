@@ -5,19 +5,35 @@ short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed inte
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
 // This Function defines the large step input for x[n] and initial conditions on y[n]
-static inline void filter_init(short int *X, short int *Y) {
-    register int i; // loop counter
+// static inline void filter_init(short int *X, short int *Y) {
+//     register int i; // loop counter
 
-    // SCALED FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
-    X[0] = (short int)0x8001; // -32767 --> Normalized (X[0] / 2^15) to x[0] = ~ -1 (-0.99997)
-    X[1] = (short int)0x8001; // -32767 --> Normalized (X[1] / 2^15) to x[1] = ~ -1 (-0.99997)
-    for (i = 2; i < 100; i++)
-        X[i] = (short int)0x7FFF; // +32767 --> Normalized to (X[i] / 2^15) x[i] = ~ +1 (+0.99997)
+//     // SCALED FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
+//     X[0] = (short int)0x8001; // -32767 --> Normalized (X[0] / 2^15) to x[0] = ~ -1 (-0.99997)
+//     X[1] = (short int)0x8001; // -32767 --> Normalized (X[1] / 2^15) to x[1] = ~ -1 (-0.99997)
+//     for (i = 2; i < 100; i++)
+//         X[i] = (short int)0x7FFF; // +32767 --> Normalized to (X[i] / 2^15) x[i] = ~ +1 (+0.99997)
 
-    // SCALED FILTER OUTPUT INITIAL CONDITIONS
-    Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
-    Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
-}
+//     // SCALED FILTER OUTPUT INITIAL CONDITIONS
+//     Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+//     Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
+// }
+
+short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+					0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+};
+short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
 int main(void) {
     // Input Coefficients (See Calculations in Report)
