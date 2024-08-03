@@ -82,8 +82,8 @@ void main(void){
     for (i=2; i<100; i++) {
 
         // Inputs and Outputs
-        int tmp_X[4] = {&X[i], &X[i-1], &X[i-2]};
-        int tmp_Y[4] = {       &Y[i-1], &Y[i-2]};
+        int tmp_X[4] = {X[i], X[i-1], X[i-2]};
+        int tmp_Y[4] = {      Y[i-1], Y[i-2]};
 
         // Load IO into NEON registers
         NEON_X = vld1q_s32( tmp_X );
