@@ -13,7 +13,7 @@ void print_int16x4_t(int16x4_t vec) {
 void print_int32x4_t(int32x4_t vec) {
     // Convert the NEON vector to a regular array
     int32_t values[4];
-    vst1_s32(values, vec); // Store the vector values into the array
+    vst1q_s32(values, vec); // Store the vector values into the array
     
     // Print the values
     printf("Vector values: %d, %d, %d, %d\n", values[0], values[1], values[2], values[3]);
