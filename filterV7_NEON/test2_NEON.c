@@ -31,7 +31,7 @@ short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed inte
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
 // This Function defines the large step input for x[n] and initial conditions on y[n]
-inline void filter_init(short int *X, short int *Y){
+static inline void filter_init(short int *X, short int *Y){
 
     register int i; // loop counter
 
@@ -103,11 +103,11 @@ void main(void){
 
         //--------DEBUG----------------//
         printf("x_curr: ");
-        print_int16x4_t(x_curr); printf('\n');
+        print_int16x4_t(x_curr); printf("\n");
         printf("x_prev1: ");
-        print_int16x4_t(x_prev1); printf('\n'); 
+        print_int16x4_t(x_prev1); printf("\n");
         printf("x_prev2: ");
-        print_int16x4_t(x_prev2); printf('\n');
+        print_int16x4_t(x_prev2); printf("\n");
         //--------DEBUG----------------//
 
         tmp_B0_combined = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B0, x_curr), 24);  //x_curr is 4 different 16-bit values, B is 4 identical 16-bit values, vdupq_n_s32(1 << 23) is 4 identical 32-bit values (result register for multiply- accumulates with rounding bits) 
@@ -116,11 +116,11 @@ void main(void){
 
         //--------DEBUG----------------//
         printf("tmp_B0_combined: ");
-        print_int32x4_t(tmp_B0_combined); printf('\n');
+        print_int32x4_t(tmp_B0_combined); printf("\n");
         printf("tmp_B1_combined: ");
-        print_int32x4_t(tmp_B1_combined); printf('\n');
+        print_int32x4_t(tmp_B1_combined); printf("\n");
         printf("tmp_B2_combined: ");
-        print_int32x4_t(tmp_B2_combined); printf('\n');
+        print_int32x4_t(tmp_B2_combined); printf("\n");
         //--------DEBUG----------------//
 
         int tmp_B0[4], tmp_B1[4], tmp_B2[4];
@@ -130,11 +130,11 @@ void main(void){
 
         //--------DEBUG----------------//
         printf("tmp_B0: ");
-        print_int32x4_t(tmp_B0_combined); printf('\n');
+        print_int32x4_t(tmp_B0_combined); printf("\n");
         printf("tmp_B1: ");
-        print_int32x4_t(tmp_B1_combined); printf('\n');
+        print_int32x4_t(tmp_B1_combined); printf("\n");
         printf("tmp_B2: ");
-        print_int32x4_t(tmp_B2_combined); printf('\n');
+        print_int32x4_t(tmp_B2_combined); printf("\n");
         //--------DEBUG----------------//
 
 
