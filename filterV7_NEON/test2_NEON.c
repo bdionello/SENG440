@@ -1,8 +1,8 @@
 /* SENG 440 - Digital Filters Final Project */
 
 // Compile in the terminal using the following command:
-// gcc -static -mfpu=neon test2_NEON.c -o filter_nonO3.s
-// gcc -static -mfpu=neon -O3 test2_NEON.c -o filter.s
+// gcc -S -static -mfpu=neon test2_NEON.c -o filter_nonO3.s
+// gcc -S -static -mfpu=neon -O3 test2_NEON.c -o filter.s
 
 # include <stdio.h>
 #include <arm_neon.h>
