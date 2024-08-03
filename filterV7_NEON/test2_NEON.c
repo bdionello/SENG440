@@ -4,6 +4,7 @@
 // gcc -static -O3 filter.c -o filter.exe
 
 # include <stdio.h>
+#include <arm_neon.h>
 
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
@@ -38,9 +39,13 @@ void main(void){
      * A second order filter uses two previous input/output samples, thus we have:
      * 2 output coefficients and 2 input coefficients + 1 for the current input */
     // Input Coefficients (See Calculations in Report)
-    const short int B0 = 0x76B0;
-    const short int B1 = 0x76B0;
-    const short int B2 = 0x76B0;
+
+    const int16x4_t B0 = vdup_n_s16(0x76B0);
+    const int16x4_t B1 = vdup_n_s16(0x76B0);
+    const int16x4_t B2 = vdup_n_s16(0x76B0);
+    // const short int B0 = 0x76B0;
+    // const short int B1 = 0x76B0;
+    // const short int B2 = 0x76B0;
     int tmp_B0, tmp_B1, tmp_B2;               
     int tmp_B0_nxt1, tmp_B1_nxt1, tmp_B2_nxt1;
     int tmp_B0_nxt2, tmp_B1_nxt2, tmp_B2_nxt2;
@@ -71,6 +76,9 @@ void main(void){
          * We must ensure that intermediate results do not exceed the range of a 
          * 32-bit signed integer [-2^31, 2^31 - 1].
          */
+
+        tmp_B0_combined = 
+
         // Compute the scaled output for iteration i (result of the scaled difference equation)
         tmp_B0      = ((int)B0 * (int)X[i  ] + (1 << 23)) >> 24;
         tmp_B1      = ((int)B1 * (int)X[i-1] + (1 << 22)) >> 23;
@@ -96,11 +104,11 @@ void main(void){
         Y[i+2]      = (short int)(tmp_B0_nxt2 + tmp_B1_nxt2 + tmp_B2_nxt2 + tmp_A1_nxt2 + tmp_A2_nxt2);
         
         // Compute the scaled output for iteration i+3 (result of the scaled difference equation)
-        tmp_B0_nxt3 = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24;
-        tmp_B1_nxt3 = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23;
-        tmp_B2_nxt3 = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24;
-        tmp_A2_nxt3 = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15;
-        tmp_A1_nxt3 = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14;
+        tmp_B0      = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24;
+        tmp_B1      = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23;
+        tmp_B2      = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24;
+        tmp_A2      = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15;
+        tmp_A1      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14;
         Y[i+3]      = (short int)(tmp_B0_nxt3 + tmp_B1_nxt3 + tmp_B2_nxt3 + tmp_A1_nxt3 + tmp_A2_nxt3);
 
         // Display output for each iteration
