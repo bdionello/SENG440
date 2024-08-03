@@ -48,11 +48,11 @@ void main(void){
     int32x4_t NEON_Y;
 
     // Rounding bits
-    const int roundbitsB[4] = {(1 << 23), (1 << 22), (1 << 23)};
-    const int roundbitsA[4] = {(1 < 13), (1 << 14)};
+    // const int roundbitsB[4] = {(1 << 23), (1 << 22), (1 << 23)};
+    // const int roundbitsA[4] = {(1 < 13), (1 << 14)};
 
-    int32x4_t NEON_roundbitsB = vld1q_s32( roundbitsB ); // Load Coefficients into NEON q-register (128-bits)
-    int32x4_t NEON_roundbitsA = vld1q_s32( roundbitsA ); // Load Coefficients into NEON q-register (128-bits)
+    // int32x4_t NEON_roundbitsB = vld1q_s32( roundbitsB ); // Load Coefficients into NEON q-register (128-bits)
+    // int32x4_t NEON_roundbitsA = vld1q_s32( roundbitsA ); // Load Coefficients into NEON q-register (128-bits)
     
     // Scale Factors -> use 23 and 14
     //const int sfB[4] = {24, 23, 24};
@@ -75,18 +75,20 @@ void main(void){
 
         // Multiply, Round and Scale
         int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X); //<----------------------------arguments might need ot be int32x4_t
-        int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB); //<----------------argument types are correct
-        int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency //<----------------argument types are correct
+        int32x4_t NEON_BX_S = vshrq_n_s32(NEON_BX, 23); // reduced all SFs for efficiency //<----------------argument types are correct
+        //int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB); //<----------------argument types are correct
+        //int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency //<----------------argument types are correct
 
         int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y); //<----------------------------arguments might need ot be int32x4_t
-        int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA); //<----------------argument types are correct
-        int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency //<----------------argument types are correct
+        int32x4_t NEON_AY_S = vshrq_n_s32(NEON_AY, 14); // reduced all SFs for efficiency //<----------------argument types are correct
+        //int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA); //<----------------argument types are correct
+        //int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency //<----------------argument types are correct
 
         // Store results in a new array for access during accumulate
         int tmp_a[4];
         int tmp_b[4];
-        vst1q_s32(tmp_b, NEON_BX_R_S);
-        vst1q_s32(tmp_a, NEON_AY_R_S);
+        vst1q_s32(tmp_b, NEON_BX_S);
+        vst1q_s32(tmp_a, NEON_AY_S);
 
         Y[i] = (short int)(tmp_b[0] + tmp_b[1] + tmp_b[2] + tmp_a[0] + tmp_a[1]);
 
