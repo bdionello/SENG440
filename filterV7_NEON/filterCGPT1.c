@@ -1,6 +1,24 @@
 #include <stdio.h>
 #include <arm_neon.h>
 
+void print_int16x4_t(int16x4_t vec) {
+    // Convert the NEON vector to a regular array
+    int16_t values[4];
+    vst1_s16(values, vec); // Store the vector values into the array
+    
+    // Print the values
+    printf("Vector values: %d, %d, %d, %d\n", values[0], values[1], values[2], values[3]);
+}
+
+void print_int32x4_t(int32x4_t vec) {
+    // Convert the NEON vector to a regular array
+    int32_t values[4];
+    vst1_s32(values, vec); // Store the vector values into the array
+    
+    // Print the values
+    printf("Vector values: %d, %d, %d, %d\n", values[0], values[1], values[2], values[3]);
+}
+
 // Initalize Input ad Output Arrays
 short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
@@ -37,7 +55,11 @@ int main(void) {
     const int16x4_t A1 = vdup_n_s16(0x74A7);
     const int16x4_t A2 = vdup_n_s16(0x94D7);
 
-    printf("B0: \n", B0);
+    print_int16x4_t(B0);
+    print_int16x4_t(B1);
+    print_int16x4_t(B2);
+    print_int16x4_t(A1);
+    print_int16x4_t(A2);
 
     // NEON Intrinsics Variables
     int16x4_t x_curr, x_prev1, x_prev2, y_prev1, y_prev2;
@@ -52,6 +74,12 @@ int main(void) {
         y_prev1 = vld1_lane_s16(&Y[i - 1], y_prev1, 0);
         y_prev2 = vld1_lane_s16(&Y[i - 2], y_prev2, 0);
 
+        print_int16x4_t(x_curr);
+        print_int16x4_t(x_prev1);
+        print_int16x4_t(x_prev2);
+        print_int16x4_t(y_prev1);
+        print_int16x4_t(y_prev2);
+
         // Perform multiplication and scaling for inputs
         tmp_B0 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B0, x_curr), 24);
         tmp_B1 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 22), B1, x_prev1), 23);
@@ -61,9 +89,18 @@ int main(void) {
         tmp_A1 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 13), A1, y_prev1), 14);
         tmp_A2 = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 14), A2, y_prev2), 15);
 
+        print_int32x4_t(tmp_B0);
+        print_int32x4_t(tmp_B1);
+        print_int32x4_t(tmp_B2);
+        print_int32x4_t(tmp_A1);
+        print_int32x4_t(tmp_A2);
+
         // Compute the scaled output (result of the scaled difference equation)
         sum = vaddq_s32(vaddq_s32(tmp_B0, tmp_B1), vaddq_s32(tmp_B2, vaddq_s32(tmp_A1, tmp_A2)));
         int16x4_t result = vmovn_s32(sum); // Narrow to 16-bit result
+
+        print_int32x4_t(sum);
+        print_int16x4_t(result);
 
         // Store the result
         vst1_lane_s16(&Y[i], result, 0);
