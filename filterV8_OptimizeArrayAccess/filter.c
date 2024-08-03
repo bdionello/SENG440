@@ -68,8 +68,7 @@ void main(void){
         //x[i+1] = ((tmp_XX1 << 16) >> 16)
         int tmp_XX0, tmp_XX1;
         tmp_XX0 = X[k];
-        tmp_XX1 = X[k+1];        
-
+        tmp_XX1 = X[k+1];
         // Compute the scaled output for iteration i (result of the scaled difference equation)
         tmp_B0     = ((int)B0 * (int)(tmp_XX1 >> 16) + (1 << 23)) >> 24; // Scale Factor = 2^24
         tmp_B1     = ((int)B1 * (int)((tmp_XX0 << 16) >> 16) + (1 << 22)) >> 23; // Scale Factor = 2^23
