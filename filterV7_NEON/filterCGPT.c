@@ -5,7 +5,7 @@ short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed inte
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
 // This Function defines the large step input for x[n] and initial conditions on y[n]
-inline void filter_init(short int *X, short int *Y){
+static inline void filter_init(short int *X, short int *Y){
     register int i; // loop counter
 
     // SCALED FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
@@ -43,7 +43,7 @@ void main(void){
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     for (int i = 2; i < 100; i += 4) { // Unroll loop by processing 4 elements at a time
         // Load current and previous inputs and outputs into NEON registers
-        x_curr  = vld1_s16(&X[i]);
+        x_curr = vld1_s16(&X[i]);
         x_prev1 = vld1_s16(&X[i - 1]);
         x_prev2 = vld1_s16(&X[i - 2]);
         y_prev1 = vld1_s16(&Y[i - 1]);
