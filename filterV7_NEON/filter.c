@@ -55,7 +55,7 @@ void main(void){
     printf("NEON_B: ");
     print_int32x4_t(NEON_B);
     printf("\n");
-    print("NEON_A: ");
+    printf("NEON_A: ");
     print_int32x4_t(NEON_A);
     printf("\n");
 
