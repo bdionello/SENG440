@@ -62,7 +62,7 @@ void main(void){
     const int16x4_t B0 = vdup_n_s16(0x76B0); //30384
     const int16x4_t B1 = vdup_n_s16(0x76B0); //30384
     const int16x4_t B2 = vdup_n_s16(0x76B0); //30384
-    int32x4_t tmp_B0_combined, tmp_B1_combined, tmp_B2_combined; //, tmp_A1, tmp_A2, sum;
+    int32x4_t tmp_B0_combined, tmp_B1_combined, tmp_B2_combined;
 
     // Output Coefficients (See Calculations in Report)
     const short int A1 = 0x74A7;  //29863
@@ -73,7 +73,7 @@ void main(void){
     int tmp_A1_nxt3, tmp_A2_nxt3;
 
     // Iniitalize input and output value arrays
-    filter_init(X, Y);
+    //filter_init(X, Y);
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14;
