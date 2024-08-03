@@ -9,6 +9,15 @@
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
 
+void print_int32x4_t(int32x4_t vec) {
+    // Convert the NEON vector to a regular array
+    int32_t values[4];
+    vst1q_s32(values, vec); // Store the vector values into the array
+
+    // Print the values
+    printf("Vector values: %d, %d, %d, %d\n", values[0], values[1], values[2], values[3]);
+}
+
 // Initalize Input ad Output Arrays
 short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
@@ -43,6 +52,13 @@ void main(void){
     int32x4_t NEON_B = vld1q_s32( B ); // Load Input Coefficients into NEON d-register (64-bits)
     int32x4_t NEON_A = vld1q_s32( A ); // Load Output Coefficients into NEON d-register (64-bits)
 
+    printf("NEON_B: ");
+    print_int32x4_t(NEON_B);
+    print("\n");
+    print("NEON_A: ");
+    print_int32x4_t(NEON_A);
+    print("\n");
+
     // Inputs and Outputs
     int32x4_t NEON_X;
     int32x4_t NEON_Y;
@@ -73,16 +89,37 @@ void main(void){
         NEON_X = vld1q_s32( tmp_X );
         NEON_Y = vld1q_s32( tmp_Y );
 
+        printf("NEON_X: ");
+        print_int32x4_t(NEON_X);
+        print("\n");
+        printf("NEON_Y: ");
+        print_int32x4_t(NEON_Y);
+        print("\n");
+
         // Multiply, Round and Scale
         int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X); //<----------------------------arguments might need ot be int32x4_t
         int32x4_t NEON_BX_S = vshrq_n_s32(NEON_BX, 23); // reduced all SFs for efficiency //<----------------argument types are correct
         //int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB); //<----------------argument types are correct
         //int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency //<----------------argument types are correct
 
+        printf("NEON_BX: ");
+        print_int32x4_t(NEON_BX);
+        print("\n");
+        printf("NEON_BX_S: ");
+        print_int32x4_t(NEON_BX_S);
+        print("\n");
+
         int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y); //<----------------------------arguments might need ot be int32x4_t
         int32x4_t NEON_AY_S = vshrq_n_s32(NEON_AY, 14); // reduced all SFs for efficiency //<----------------argument types are correct
         //int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA); //<----------------argument types are correct
         //int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency //<----------------argument types are correct
+
+        printf("NEON_AY: ");
+        print_int32x4_t(NEON_AY);
+        print("\n");
+        printf("NEON_AY_S: ");
+        print_int32x4_t(NEON_AY_S);
+        print("\n");
 
         // Store results in a new array for access during accumulate
         int tmp_a[4];
