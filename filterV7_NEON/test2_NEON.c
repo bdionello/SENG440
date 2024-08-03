@@ -102,9 +102,12 @@ void main(void){
         x_prev2 = vld1_s16(&X[i - 2]);  // 4 values starting from i-2 (16-bits each)
 
         //--------DEBUG----------------//
-        print_int16x4_t(x_curr);
-        print_int16x4_t(x_prev1);
-        print_int16x4_t(x_prev2);
+        printf("x_curr: ");
+        print_int16x4_t(x_curr); printf('\n');
+        printf("x_prev1: ");
+        print_int16x4_t(x_prev1); printf('\n'); 
+        printf("x_prev2: ");
+        print_int16x4_t(x_prev2); printf('\n');
         //--------DEBUG----------------//
 
         tmp_B0_combined = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B0, x_curr), 24);  //x_curr is 4 different 16-bit values, B is 4 identical 16-bit values, vdupq_n_s32(1 << 23) is 4 identical 32-bit values (result register for multiply- accumulates with rounding bits) 
@@ -112,15 +115,27 @@ void main(void){
         tmp_B2_combined = vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), B2, x_prev2), 24);
 
         //--------DEBUG----------------//
-        print_int32x4_t(tmp_B0_combined);
-        print_int32x4_t(tmp_B1_combined);
-        print_int32x4_t(tmp_B2_combined);
+        printf("tmp_B0_combined: ");
+        print_int32x4_t(tmp_B0_combined); printf('\n');
+        printf("tmp_B1_combined: ");
+        print_int32x4_t(tmp_B1_combined); printf('\n');
+        printf("tmp_B2_combined: ");
+        print_int32x4_t(tmp_B2_combined); printf('\n');
         //--------DEBUG----------------//
 
         int tmp_B0[4], tmp_B1[4], tmp_B2[4];
-        vst1_s32(tmp_B0, tmp_B0_combined);
-        vst1_s32(tmp_B1, tmp_B1_combined);
-        vst1_s32(tmp_B2, tmp_B2_combined);
+        vst1q_s32(tmp_B0, tmp_B0_combined);
+        vst1q_s32(tmp_B1, tmp_B1_combined);
+        vst1q_s32(tmp_B2, tmp_B2_combined);
+
+        //--------DEBUG----------------//
+        printf("tmp_B0: ");
+        print_int32x4_t(tmp_B0_combined); printf('\n');
+        printf("tmp_B1: ");
+        print_int32x4_t(tmp_B1_combined); printf('\n');
+        printf("tmp_B2: ");
+        print_int32x4_t(tmp_B2_combined); printf('\n');
+        //--------DEBUG----------------//
 
 
         // Compute the scaled output for iteration i (result of the scaled difference equation)
