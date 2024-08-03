@@ -27,8 +27,8 @@ short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed int
 void main(void){
 
     // Initial Conditions
-    Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
-    Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
+    Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf("Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0]) / 16384);
@@ -42,8 +42,8 @@ void main(void){
     int16x4_t x_curr, x_prev1, x_prev2;                          // 16bit x 4 NEON d-registers to store input values for each iteration 
 
     // Output Coefficients (See Calculations in Report)
-    const short int A1 = 0x74A7;  //29863
-    const short int A2 = 0x94D7;  //-27433
+    const short int A1 = 0x74A7; //29863
+    const short int A2 = 0x94D7; //-27433
     int tmp_A1, tmp_A2;          
     int tmp_A1_nxt1, tmp_A2_nxt1;
     int tmp_A1_nxt2, tmp_A2_nxt2;
