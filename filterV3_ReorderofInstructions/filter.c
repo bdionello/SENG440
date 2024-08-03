@@ -1,7 +1,7 @@
 /* SENG 440 - Digital Filters Final Project */
 
 // Compile in the terminal using the following command:
-// gcc -static filter.c -o filter.exe
+// gcc -static -O3 filter.c -o filter.exe
 
 # include <stdio.h>
 
