@@ -18,15 +18,15 @@ short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7F
 };
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
 
-// Initial Conditions
-Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
-Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
-
-// Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
-printf("Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0]) / 16384);
-printf("Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1]) / 16384);
-
 int main(void) {
+
+    // Initial Conditions
+    Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
+
+    // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
+    printf("Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0]) / 16384);
+    printf("Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1]) / 16384);
 
     // Input Coefficients (See Calculations in Report)
     const int16x4_t B0 = vdup_n_s16(0x76B0);
