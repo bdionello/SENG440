@@ -10,7 +10,7 @@
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
 
-// Initial Conditions: Initalize Input ad Output Arrays
+// Initalize Input ad Output Arrays
 short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
@@ -26,8 +26,6 @@ short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7F
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
 };
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
-Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
-Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 
 // short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed integers)
 // short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
@@ -53,6 +51,10 @@ Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 // }
 
 void main(void){
+
+    // Initial Conditions
+    Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf("Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0]) / 16384);
