@@ -1,7 +1,7 @@
 /* SENG 440 - Digital Filters Final Project */
 
 // Compile in the terminal using the following command:
-// gcc -static -O3 filter.c -o filter.exe
+// gcc filter.c -o filter.exe
 
 # include <stdio.h>
 
@@ -40,7 +40,7 @@ void main(void){
     const short int A1 = 0x74A7; //
     const short int A2 = 0x94D7; // note this constant is a negative value (sign 2's complement)
     int tmp_A1, tmp_A2;          // to store terms in the difference equation for each iteration n
-    
+
     // Iniitalize output value array
     Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
     Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1 
