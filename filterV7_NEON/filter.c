@@ -40,12 +40,12 @@ void main(void){
     const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
     const short int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
 
-    int16x4_t NEON_B = vld1_s16( B ); // Load Input Coefficients into NEON d-register (64-bits)
-    int16x4_t NEON_A = vld1_s16( A ); // Load Output Coefficients into NEON d-register (64-bits)
+    int32x4_t NEON_B = vld1_s16( B ); // Load Input Coefficients into NEON d-register (64-bits)
+    int32x4_t NEON_A = vld1_s16( A ); // Load Output Coefficients into NEON d-register (64-bits)
 
     // Inputs and Outputs
-    int16x4_t NEON_X;
-    int16x4_t NEON_Y;
+    int32x4_t NEON_X;
+    int32x4_t NEON_Y;
 
     // Rounding bits
     const int roundbitsB[4] = {(1 << 23), (1 << 22), (1 << 23)};
