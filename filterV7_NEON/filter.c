@@ -4,51 +4,46 @@
 // gcc -O3 -mfpu=neon filter.c -o filter.exe
 
 # include <stdio.h>
-#include "arm_neon.h"
+#include <arm_neon.h>
 
 // Note: short int -> 16 bits
 // Note:       int -> 32 bits
 
-short int X[128]; // Previous Inputs Array (stores up to 128, 16-bit signed integers)
+// Initalize Input ad Output Arrays
+short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+                    0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
+};
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
-
-// This Function defines the large step input for x[n] and initial conditions on y[n]
-void filter_init(short int *X, short int *Y){
-
-    register int i; // loop counter
-
-    /* Define Initial Conditions for Input and Output *
-     * - This provides a consistent starting point helping
-     *   to avoid undefined behaviour that could occur if
-     *   the arrays X and Y contained random garbage */
-    // SCALED FILTER INPUT DEFINITION: Large Step Function from -1 to 1, scaled by 2^15
-    X[0] = (short int)0x8001; //-32767 --> Normalized (X[0] / 2^15) to x[0] = ~ -1 (-0.99997)
-    X[1] = (short int)0x8001; //-32767 --> Normalized (X[1] / 2^15) to x[1] = ~ -1 (-0.99997)
-    for (i=2; i<100; i++)
-        X[i] = (short int)0x7FFF; //+32767 --> Normalized to (X[i] / 2^15) x[i] = ~ +1 (+0.99997)
-
-    // SCALED FILTER OUTPUT INITIAL CONDITIONS
-    Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
-    Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
-}
 
 void main(void){
 
-    // Iniitalize input and output value arrays
-    filter_init(X, Y);
+    // Initial Conditions
+    Y[0] = (short int)0xC000; // -16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
+    Y[1] = (short int)0xC000; // -16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
 
     // Display initial values of the output array (scaled decimal, scaled hex, unscaled decimal)
     printf( "Y[ 0] = %+6hi = 0x%04hX ....... y[ 0] = %8.5f\n", Y[0], Y[0], ((float)Y[0])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     
-    //Coeffincients
+    //Coefficients
     const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
     const short int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
 
-    int16x4_t NEON_B = vld1_s16( B ); // Load Coefficients into NEON d-register (64-bits)
-    int16x4_t NEON_A = vld1_s16( A ); // Load Coefficients into NEON d-register (64-bits)
+    int16x4_t NEON_B = vld1_s16( B ); // Load Input Coefficients into NEON d-register (64-bits)
+    int16x4_t NEON_A = vld1_s16( A ); // Load Output Coefficients into NEON d-register (64-bits)
 
-    // Input and Outputs
+    // Inputs and Outputs
     int16x4_t NEON_X;
     int16x4_t NEON_Y;
 
@@ -59,12 +54,12 @@ void main(void){
     int32x4_t NEON_roundbitsB = vld1q_s32( roundbitsB ); // Load Coefficients into NEON q-register (128-bits)
     int32x4_t NEON_roundbitsA = vld1q_s32( roundbitsA ); // Load Coefficients into NEON q-register (128-bits)
     
-    // Scale Factors
-    const int sfB[4] = {24, 23, 24};
-    const int sfA[4] = {14, 15};
+    // Scale Factors -> use 23 and 14
+    //const int sfB[4] = {24, 23, 24};
+    //const int sfA[4] = {14, 15};
 
-    uint16x4_t NEON_sfB = vld1_u16( sfB );
-    uint16x4_t NEON_sfA = vld1_u16( sfA );
+    //uint16x4_t NEON_sfB = vld1_u16( sfB );
+    //uint16x4_t NEON_sfA = vld1_u16( sfA );
 
     // Compute the scaled output Y[n] for all n beyond initial conditions (from 2 to 99)
     register int i;
@@ -79,22 +74,21 @@ void main(void){
         NEON_Y = vld1_s16( tmp_Y );
 
         // Multiply, Round and Scale
-        int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X);
-        int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB);
-        int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency
+        int32x4_t NEON_BX = vmulq_s32(NEON_B, NEON_X); //<----------------------------arguments might need ot be int32x4_t
+        int32x4_t NEON_BX_R = vaddq_s32(NEON_BX, NEON_roundbitsB); //<----------------argument types are correct
+        int32x4_t NEON_BX_R_S = vshrq_n_s32(NEON_BX_R, 23); // reduced all SFs for efficiency //<----------------argument types are correct
 
-        int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y);
-        int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA);
-        int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency
+        int32x4_t NEON_AY = vmulq_s32(NEON_A, NEON_Y); //<----------------------------arguments might need ot be int32x4_t
+        int32x4_t NEON_AY_R = vaddq_s32(NEON_AY, NEON_roundbitsA); //<----------------argument types are correct
+        int32x4_t NEON_AY_R_S = vshrq_n_s32(NEON_AY_R, 14); // reduced all SFs for efficiency //<----------------argument types are correct
 
         // Store results in a new array for access during accumulate
-        int a[4];
-        int b[4];
+        int tmp_a[4];
+        int tmp_b[4];
+        vst1q_s32(tmp_b, NEON_BX_R_S);
+        vst1q_s32(tmp_a, NEON_AY_R_S);
 
-        vst1q_s32(a, NEON_AY_R_S);
-        vst1q_s32(b, NEON_BX_R_S);
-
-        Y[i] = (short int)(b[0] + b[1] + b[2] + a[0] + a[1]);
+        Y[i] = (short int)(tmp_b[0] + tmp_b[1] + tmp_b[2] + tmp_a[0] + tmp_a[1]);
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14;
