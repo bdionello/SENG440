@@ -59,11 +59,8 @@ void main(void){
          */
         
         // Multiply Current and Previous Two Scaled Inputs by Input Coefficients then divide by scalefactor and round
-         Y[i] = (((int)B0 * (int)X[i  ] + (1 << 23)) >> 24) + (((int)B1 * (int)X[i-1] + (1 << 22)) >> 23) + (((int)B2 * (int)X[i-2] + (1 << 23)) >> 24)
-                + (((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15); // Scale Factor = 2^24
-    
-        // Compute the scaled output (result of the scaled difference equation)
-        //Y[i] = (short int)(tmp_B0 + tmp_B1 + tmp_B2 + tmp_A1 + tmp_A2); // Recall: y[n] = Y[n] / SFy
+         Y[i] = (((int)B0*(int)X[i]+(1<<23))>>24) + (((int)B1*(int)X[i-1]+(1<<22))>>23) + (((int)B2*(int)X[i-2]+(1<<23))>>24)
+                + (((int)A1*(int)Y[i-1]+(1<<13))>>14) + (((int)A2*(int)Y[i-2]+(1<<14))>>15); // Scale Factor = 2^24
 
         // Display output for each iteration
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i, Y[i], Y[i], i, ((float)Y[i])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
