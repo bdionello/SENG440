@@ -37,8 +37,8 @@ void main(void){
     printf( "Y[ 1] = %+6hi = 0x%04hX ....... y[ 1] = %8.5f\n", Y[1], Y[1], ((float)Y[1])/16384 ); // SFy = 2^14; used to be 2^15 = 32768
     
     //Coefficients
-    const short int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
-    const short int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
+    const int B[4] = {0x76B0, 0x76B0, 0x76B0}; // {B0, B1, B2}
+    const int A[4] = {0x74A7, 0x94D7};         // {A1, A2}
 
     int32x4_t NEON_B = vld1q_s32( B ); // Load Input Coefficients into NEON d-register (64-bits)
     int32x4_t NEON_A = vld1q_s32( A ); // Load Output Coefficients into NEON d-register (64-bits)
