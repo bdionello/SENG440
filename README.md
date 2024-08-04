@@ -13,17 +13,17 @@
 
 -Please compile using the commands listed at the top of each C file. See below for reference:
 
-# Compile NEON dependent files (such as filterVFinal) in the terminal using the following commands:
+- Compile NEON dependent files (such as filterVFinal) in the terminal using the following commands:
 
 gcc -S -static -mfpu=neon filter.c -o filter_nonO3.s
 gcc -S -static -mfpu=neon -O3 filter.c -o filter_O3.s
 
-# Compile Non-NEON dependent file using:
+- Compile Non-NEON dependent file using:
 
 gcc -S -O3 filter.c -o filter_O3.s
 gcc -S filter.c -o filter_nonO3.s
 
-# Timed Output files are generated using the included shell script:
+- Timed Output files are generated using the included shell script:
 
 bash FilterTimed.sh > FilterTimed_out.txt
 
