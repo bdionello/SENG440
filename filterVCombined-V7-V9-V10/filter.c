@@ -44,13 +44,13 @@ void main(void){
     for (i=2; i<102; i+=4) {
         // Store Results for BX values into arrays in memory
         int tmp_B0[4], tmp_B1[4], tmp_B2[4];
-        vst1q_s32(tmp_B0, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), vdup_n_s16(B0), vld1_s16(&X[i])), 24));
+        vst1q_s32(tmp_B0, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), vdup_n_s16(B0), vld1_s16(&X[i    ])), 24));
         vst1q_s32(tmp_B1, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 22), vdup_n_s16(B1), vld1_s16(&X[i - 1])), 23));
         vst1q_s32(tmp_B2, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), vdup_n_s16(B2), vld1_s16(&X[i - 2])), 24));
 
         // Compute the scaled output for iteration i (Y[i])
-        Y[i] = (short int)(tmp_B0[0] + tmp_B1[0] + tmp_B2[0] + (((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15));        
-        Y[i+1] = (short int)(tmp_B0[1] + tmp_B1[1] + tmp_B2[1] + (((int)A1 * (int)Y[i] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15));
+        Y[i]   = (short int)(tmp_B0[0] + tmp_B1[0] + tmp_B2[0] + (((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15));        
+        Y[i+1] = (short int)(tmp_B0[1] + tmp_B1[1] + tmp_B2[1] + (((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15));
         Y[i+2] = (short int)(tmp_B0[2] + tmp_B1[2] + tmp_B2[2] + (((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i  ] + (1 << 14)) >> 15));    
         Y[i+3] = (short int)(tmp_B0[3] + tmp_B1[3] + tmp_B2[3] + (((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15));
 
