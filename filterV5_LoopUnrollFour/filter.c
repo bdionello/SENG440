@@ -90,11 +90,11 @@ void main(void){
         Y[i+2]      = (short int)(tmp_B0_nxt2 + tmp_B1_nxt2 + tmp_B2_nxt2 + tmp_A1_nxt2 + tmp_A2_nxt2);
         
         // Compute the scaled output for iteration i+3 (result of the scaled difference equation)
-        tmp_B0      = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24;
-        tmp_B1      = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23;
-        tmp_B2      = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24;
-        tmp_A2      = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15;
-        tmp_A1      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14;
+        tmp_B0_nxt3      = ((int)B0 * (int)X[i+3] + (1 << 23)) >> 24;
+        tmp_B1_nxt3      = ((int)B1 * (int)X[i+2] + (1 << 22)) >> 23;
+        tmp_B2_nxt3      = ((int)B2 * (int)X[i+1] + (1 << 23)) >> 24;
+        tmp_A2_nxt3      = ((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15;
+        tmp_A1_nxt3      = ((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14;
         Y[i+3]      = (short int)(tmp_B0_nxt3 + tmp_B1_nxt3 + tmp_B2_nxt3 + tmp_A1_nxt3 + tmp_A2_nxt3);
 
        // Display output for each iteration

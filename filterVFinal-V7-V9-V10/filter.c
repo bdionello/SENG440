@@ -13,6 +13,7 @@
 #define A1 29863
 #define A2 -27433
 
+void main(void){
 // Initalize Input ad Output Arrays
 short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
@@ -29,8 +30,6 @@ short int X[128] = {0x8001, 0x8001, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7F
                     0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF, 0x7FFF,
 };
 short int Y[128]; // Previous Outputs Array (stores up to 128, 16-bit signed integers)
-
-void main(void){
     // Initial Conditions
     Y[0] = (short int)0xC000; //-16384 --> Normalized (Y[0] / 2^14) to y[0] = -1
     Y[1] = (short int)0xC000; //-16384 --> Normalized (Y[1] / 2^14) to y[1] = -1
@@ -48,10 +47,20 @@ void main(void){
         vst1q_s32(tmp_B1, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 22), vdup_n_s16(B1), vld1_s16(&X[i - 1])), 23));
         vst1q_s32(tmp_B2, vshrq_n_s32(vmlal_s16(vdupq_n_s32(1 << 23), vdup_n_s16(B2), vld1_s16(&X[i - 2])), 24));
 
+        /* Note: When a 32-bit processor performs operations on 16-bit fixed-point numbers, 
+         * intermediate results can still use the full 32-bit range [BAR-C] "Cast operations must be commented". 
+         * We must ensure that intermediate results do not exceed the range of a 32-bit signed integer [-2^31, 2^31 - 1].
+         */
         // Compute the scaled output for iteration i (Y[i])
+<<<<<<< HEAD:filterVCombined-V7-V9-V10/filter.c
         Y[i]   = (short int)(tmp_B0[0] + tmp_B1[0] + tmp_B2[0] + (((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15));        
         Y[i+1] = (short int)(tmp_B0[1] + tmp_B1[1] + tmp_B2[1] + (((int)A1 * (int)Y[i  ] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15));
         Y[i+2] = (short int)(tmp_B0[2] + tmp_B1[2] + tmp_B2[2] + (((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i  ] + (1 << 14)) >> 15));    
+=======
+        Y[i] = (short int)(tmp_B0[0] + tmp_B1[0] + tmp_B2[0] + (((int)A1 * (int)Y[i-1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-2] + (1 << 14)) >> 15));        
+        Y[i+1] = (short int)(tmp_B0[1] + tmp_B1[1] + tmp_B2[1] + (((int)A1 * (int)Y[i] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i-1] + (1 << 14)) >> 15));
+        Y[i+2] = (short int)(tmp_B0[2] + tmp_B1[2] + tmp_B2[2] + (((int)A1 * (int)Y[i+1] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i] + (1 << 14)) >> 15));    
+>>>>>>> 6f13d7cdbf5d5a4b586247f0a46f28423cd2e15a:filterVFinal-V7-V9-V10/filter.c
         Y[i+3] = (short int)(tmp_B0[3] + tmp_B1[3] + tmp_B2[3] + (((int)A1 * (int)Y[i+2] + (1 << 13)) >> 14) + (((int)A2 * (int)Y[i+1] + (1 << 14)) >> 15));
 
         // Display output for each iteration
@@ -60,5 +69,5 @@ void main(void){
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i+2, Y[i+2], Y[i+2], i+2, ((float)Y[i+2])/16384 ); // SFy = 2^14;
         printf( "Y[%2d] = %+6hi = 0x%04hX ....... y[%2d] = %8.5f\n", i+3, Y[i+3], Y[i+3], i+3, ((float)Y[i+3])/16384 ); // SFy = 2^14;
     }
-
+return; // [MISRA-C] "Have one exit point via a return at the bottom of the function" 
 } /* main */
